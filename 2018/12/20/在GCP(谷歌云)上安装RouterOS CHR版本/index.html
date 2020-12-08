@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<link rel="stylesheet" href="/css/main.css">
+
+    <title>
+    
+        在GCP(谷歌云)上安装RouterOS CHR版本 - 
+     
+    海天共秋水一色
+</title>
+    <link rel="alternate" href="/rss.xml" type="application/atom+xml">
+    <link rel="shortcut icon" href="/favicon.ico">
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+    <div id="root">
+        <aside class="aside-wrap" style="background-image: url(https://i.loli.net/2020/12/08/oQ6CXL43HDWpB2I.jpg); width: 300px">
+    <img src="https://i.loli.net/2020/12/08/mKOT8BgjFwbof4p.jpg" class="user-avatar" alt="avatar"> 
+
+    <div class="nav-wrap">
+        <h1 class="author">vhvy</h1>
+        <p class="subtitle">迟点也可以的。</p>
+        <ul class="nav-list">
+            
+            
+            <li class="nav-item">
+                <a href="/ ">首页 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/categories ">分类 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/tags ">标签 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/chaos ">混沌 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/archives ">归档 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/blogroll ">友链 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/about ">关于 </a>
+            </li>
+            
+            
+        </ul>
+        <ul class="sub-nav-list">
+            
+            <li class="sub-nav-item">
+                <a target="_blank" rel="noopener" href="https://github.com/vhvy " aria-label="github" title="github" style="background-image: url(https://i.loli.net/2020/11/15/KgnCLhyWJaYpX3U.png);background-color: #fff;background-position: 40%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="mailto:vhvy@qq.com " aria-label="email" title="email" style="background-image: url(https://i.loli.net/2020/11/15/ZGnqMQsFutvEcdb.png);background-color: #fff;background-size: 70%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="/rss.xml " aria-label="rss" title="rss" style="background-image: url(https://i.loli.net/2020/11/15/mkNMb9soJOVTQWL.png);background-color: #ef7522;background-size: 65%"></a>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+        <main class="body-box" style="margin-left: 300px;">
+            <article class="container">
+                
+<link rel="stylesheet" href="/css/content.css">
+ 
+
+    
+    <link rel="stylesheet"
+        href="//cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css">
+    
+
+
+<div class="content-box">
+    <div class="meta">
+    <div class="date">
+        <time>Dec 20, 2018</time>
+    </div>
+</div>
+
+    <h1 class="title">在GCP(谷歌云)上安装RouterOS CHR版本</h1>
+    <div class="content">
+         
+        
+             
+            <p class="expired-tips">提醒：本文最后更新于 720 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        
+        <p>前段时间就注意到了GCP送免费300刀的活动，想试一下在上面装RouterOS的CHR版本，于是就有了本文的诞生。</p>
+<p>注册GCP以及信用卡验证以及普通设置这些环节想必我就不用多说了，大家肯定都会的。</p>
+<p>如果你使用的是Linux或者macOS之类的*nix系统，请直接往下拉。如果你使用的是Win10操作系统，请启用Win10的Linux子系统，即WSL，接下来的操作需要在shell环境进行操作；   </p>
+<p>如果使用macOS系统，请安装truncate和gnu-tar，可以使用brew安装。    </p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">brew <span class="token function">install</span> gnu-tar
+brew <span class="token function">install</span> truncate<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>本文参考自mikritik的<a target="_blank" rel="noopener" href="https://wiki.mikrotik.com/wiki/Manual:CHR_GCE">wiki</a>。</p>
+<p>首先打开mikritik的<a target="_blank" rel="noopener" href="https://mikrotik.com/download">下载页面</a>，我们需要下载CHR的RAW格式镜像，如下图。      </p>
+<p><img src="https://i.loli.net/2020/12/08/lzBVgd3KqXTrnto.png" alt="下载地址">  </p>
+<p>右键-复制链接地址，打开终端：    </p>
+<p><code>wget https://download2.mikrotik.com/routeros/6.43.7/chr-6.43.7.img.zip</code>    </p>
+<p><img src="https://i.loli.net/2020/12/08/aUN49TCHe2LtGZn.png" alt="下载">    </p>
+<p>然后解压：    </p>
+<p><code>unzip chr-6.43.7.img.zip</code>    </p>
+<p>由于谷歌云的限制，所以我们需要调整一下文件大小：    </p>
+<p>Linux或WSL直接使用如下命令：    </p>
+<p><code>truncate --size=1G chr-6.43.7.img</code>    </p>
+<p>macOS使用如下命令：    </p>
+<p><code>truncate -s 1G chr-6.43.7.img</code></p>
+<p>接下来转换成谷歌云需要的镜像格式：</p>
+<p>Linux&amp;WSL:</p>
+<pre class="line-numbers language-none"><code class="language-none">mv chr-6.43.7.img disk.raw
+tar -Sczf chr-6.43.7.tar.gz disk.raw<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>macOS:</p>
+<pre class="line-numbers language-none"><code class="language-none">mv chr-6.43.7.img disk.raw
+gtar -Sczf chr-6.43.7.tar.gz disk.raw<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>macOS必须使用gtar进行打包，使用tar进行打包到后面100%报错。    </p>
+<p><img src="https://i.loli.net/2020/12/08/olKmJVxOhGrj4fD.png" alt="img">    </p>
+<p>至此镜像制作完毕，接下来在谷歌云的WEB界面进行操作。</p>
+<p>打开<a href="console.cloud.google.com">谷歌云控制台</a>，点击左侧导航菜单-存储-存储-<a target="_blank" rel="noopener" href="https://console.cloud.google.com/storage/browser">浏览器</a>，然后创建存储分区。    </p>
+<p><img src="https://i.loli.net/2020/12/08/kAInfTBqM1abzlr.png" alt="存储分区"></p>
+<p>接下来创建存储分区，名称随便起吧。    </p>
+<p><img src="https://i.loli.net/2020/12/08/6DLoTu3Sb5v9ypm.png" alt="建立存储分区"></p>
+<p>然后上传刚才打包好的镜像</p>
+<p><img src="https://i.loli.net/2020/12/08/omB2jEcwHyrlvg8.png" alt="镜像"><br><img src="https://i.loli.net/2020/12/08/rFksTGd2LEmCOuK.png" alt="镜像"></p>
+<p>接着点击左侧导航菜单-计算-Compute Engine-<a target="_blank" rel="noopener" href="https://console.cloud.google.com/compute/images">映像</a></p>
+<p><img src="https://i.loli.net/2020/12/08/ehtuB5UT4bF9QIx.png" alt="映像">  </p>
+<p>点击创建映像，来源选择Cloud Storage，然后选择刚才上传的映像。</p>
+<p><img src="https://i.loli.net/2020/12/08/UNKIFPpXQfDctdT.png" alt="创建映像"></p>
+<p>然后点击左侧导航菜单-计算-Compute Engine-<a target="_blank" rel="noopener" href="https://console.cloud.google.com/compute/instances">VM实例</a>，选择创建实例。</p>
+<p>区域我选择的台湾b区，机器类型用微型，并取消容器的勾选，然后更改启动磁盘为自定义映像，并选择刚才创建的映像，磁盘大小选择1G即可。</p>
+<p>防火墙选择勾选允许HTTP和HTTPS流量。</p>
+<p><img src="https://i.loli.net/2020/12/08/WO9jdl8Mg5Q2bq4.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/12/08/vqnchtBPYLMVH2e.png" alt="img"></p>
+<p>稍等几十秒，实例即可创建完毕。</p>
+<p><img src="https://i.loli.net/2020/12/08/rAqdl8mPiwcIk3t.png" alt="img"></p>
+<p>打开WinBox，连接外部ip，账户名admin，密码为空。</p>
+<p>打开System-Users，创建一个Group为full的新用户并设置密码，然后删除admin账户。</p>
+<p>然后打开IP-Services，关闭除了WinBox之外的所有服务。</p>
+<p><img src="https://i.loli.net/2020/12/08/FPygl3I8s9XYDLe.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/12/08/eX3K7EFUT28xRbz.png" alt="img">    </p>
+<p>至此，RouterOS CHR创建完毕，不过此时的CHR的端口速率被限制在1M，可以在IP-License中点击Renew License中登陆Mikrotik的账户，级别选择P1，可以免费体验两个月的P1，即解除端口速率限制至1G，如果后续还需要继续使用，可以在万能的淘宝购买CHR P1许可证，大概160 RMB左右。</p>
+<p><img src="https://i.loli.net/2020/12/08/uN8D7EfloGydXQ6.png" alt="img"></p>
+<p><img src="https://i.loli.net/2020/12/08/ihclBQSgUP3Xdka.png" alt="img"></p>
+
+    </div>
+</div>
+
+<div class="pagination">
+    
+        <a href="/2019/05/15/记录一次更换光猫后DNS被劫持导致的网络问题/" class="link prev">记录一次更换光猫后DNS被劫持导致的网络问题</a>
+    
+    
+        <a href="/2018/11/09/ESXI中运行RouterOS和openWRT/" class="link next">ESXI中运行RouterOS和openWRT</a>
+    
+</div>
+            </article>
+            <footer class="footer">
+    <p class="copyright">©️ 2018 - 2020 海天共秋水一色</p>
+    <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
+</footer>
+        </main>
+    </div>
+</body>
+
+</html>

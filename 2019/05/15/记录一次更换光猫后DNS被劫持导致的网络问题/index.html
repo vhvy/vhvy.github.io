@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<link rel="stylesheet" href="/css/main.css">
+
+    <title>
+    
+        记录一次更换光猫后DNS被劫持导致的网络问题 - 
+     
+    海天共秋水一色
+</title>
+    <link rel="alternate" href="/rss.xml" type="application/atom+xml">
+    <link rel="shortcut icon" href="/favicon.ico">
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+    <div id="root">
+        <aside class="aside-wrap" style="background-image: url(https://i.loli.net/2020/12/08/oQ6CXL43HDWpB2I.jpg); width: 300px">
+    <img src="https://i.loli.net/2020/12/08/mKOT8BgjFwbof4p.jpg" class="user-avatar" alt="avatar"> 
+
+    <div class="nav-wrap">
+        <h1 class="author">vhvy</h1>
+        <p class="subtitle">迟点也可以的。</p>
+        <ul class="nav-list">
+            
+            
+            <li class="nav-item">
+                <a href="/ ">首页 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/categories ">分类 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/tags ">标签 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/chaos ">混沌 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/archives ">归档 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/blogroll ">友链 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/about ">关于 </a>
+            </li>
+            
+            
+        </ul>
+        <ul class="sub-nav-list">
+            
+            <li class="sub-nav-item">
+                <a target="_blank" rel="noopener" href="https://github.com/vhvy " aria-label="github" title="github" style="background-image: url(https://i.loli.net/2020/11/15/KgnCLhyWJaYpX3U.png);background-color: #fff;background-position: 40%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="mailto:vhvy@qq.com " aria-label="email" title="email" style="background-image: url(https://i.loli.net/2020/11/15/ZGnqMQsFutvEcdb.png);background-color: #fff;background-size: 70%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="/rss.xml " aria-label="rss" title="rss" style="background-image: url(https://i.loli.net/2020/11/15/mkNMb9soJOVTQWL.png);background-color: #ef7522;background-size: 65%"></a>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+        <main class="body-box" style="margin-left: 300px;">
+            <article class="container">
+                
+<link rel="stylesheet" href="/css/content.css">
+ 
+
+    
+    <link rel="stylesheet"
+        href="//cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css">
+    
+
+
+<div class="content-box">
+    <div class="meta">
+    <div class="date">
+        <time>May 15, 2019</time>
+    </div>
+</div>
+
+    <h1 class="title">记录一次更换光猫后DNS被劫持导致的网络问题</h1>
+    <div class="content">
+         
+        
+             
+            <p class="expired-tips">提醒：本文最后更新于 574 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        
+        <p>因为朋友加装了一条新的宽带，他又不想花200元购买电信的光猫，于是让电信施工人员留下注册用LOID以及宽带账号密码后就离开了，打算自购光猫进行安装。</p>
+<p>他在淘宝花了29元购买了一台二手友华PT632光猫，到货接上光猫填入LOID，显示配置下发失败，这个直接略过即可，因为我们这个地区不需要下发配置就可以注册上光猫。</p>
+<p>接下来改为桥接模式，在路由器里设置了pppoe拨号后成功拨号，但是发现打开任何网页都会跳转到光猫的192.168.1.1地址，提醒配置下发失败，请重新注册。</p>
+<p>然而此时路由器已经成功拨号，根本不需要它下发配置。打开任何网页会跳转到光猫页面，QQ可以使用，ip地址可以ping通，这显然是被光猫劫持了DNS。</p>
+<p>经过几番调试后，确认此光猫和本地区八字不合，无法下发配置，成功拨号本可以正常使用却被光猫自作聪明的劫持DNS到设置页面。</p>
+<p>随即下单了一台新的SA1456C，但是等待到货的这几天需要用网络，这该如何是好呢？仔细想来，虽然光猫劫持了DNS，但是对于IP访问是畅通无阻，这么说只要解决DNS劫持的问题就好了。</p>
+<p>我在我的ROS路由器上架设了L2TP服务器，朋友家的ROS路由器拨入我的ROS路由器，服务器地址直接填写我的公网IP地址，这样就成功拨入。</p>
+<p>然后在他的ROS路由器上做内网DNS劫持，将所有来自内网53端口的DNS请求经过VPN隧道全部转发到我的ROS路由器上来进行解析，这样就绕开了光猫的DNS劫持，暂时解决了朋友的网络问题。</p>
+<p>几天后，SA1456C到货，直接是双模华为原厂界面，输入LOID之后路由器直接拨号成功了，也没有DNS劫持问题，但是在测速后发现300M的宽带只有30M的速率。 </p>
+<p>百度搜索几番后得知一部分EPON改造的G/E双模SA1456C光猫用在GPON网络上会出现速度很慢的问题，问过店家后得知这台1456C正是EPON改造的双模光猫，于是退货之~</p>
+<p>朋友到这里也心累了，早知道直接花200元好了。 但是怎能半途而废呢？于是在淘宝下单了我的同款8321R光猫，等待几日到货后再次输入LOID，路由器拨号成功，无DNS劫持问题，SpeedTest测速也有330M的速率，朋友的网络问题终于告一段落。</p>
+
+    </div>
+</div>
+
+<div class="pagination">
+    
+        <a href="/2019/06/14/博客今天完工了/" class="link prev">博客今天完工了</a>
+    
+    
+        <a href="/2018/12/20/在GCP(谷歌云)上安装RouterOS CHR版本/" class="link next">在GCP(谷歌云)上安装RouterOS CHR版本</a>
+    
+</div>
+            </article>
+            <footer class="footer">
+    <p class="copyright">©️ 2018 - 2020 海天共秋水一色</p>
+    <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
+</footer>
+        </main>
+    </div>
+</body>
+
+</html>

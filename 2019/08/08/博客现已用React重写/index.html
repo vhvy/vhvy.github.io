@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<link rel="stylesheet" href="/css/main.css">
+
+    <title>
+    
+        博客现已用React重写 - 
+     
+    海天共秋水一色
+</title>
+    <link rel="alternate" href="/rss.xml" type="application/atom+xml">
+    <link rel="shortcut icon" href="/favicon.ico">
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+    <div id="root">
+        <aside class="aside-wrap" style="background-image: url(https://i.loli.net/2020/12/08/oQ6CXL43HDWpB2I.jpg); width: 300px">
+    <img src="https://i.loli.net/2020/12/08/mKOT8BgjFwbof4p.jpg" class="user-avatar" alt="avatar"> 
+
+    <div class="nav-wrap">
+        <h1 class="author">vhvy</h1>
+        <p class="subtitle">迟点也可以的。</p>
+        <ul class="nav-list">
+            
+            
+            <li class="nav-item">
+                <a href="/ ">首页 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/categories ">分类 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/tags ">标签 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/chaos ">混沌 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/archives ">归档 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/blogroll ">友链 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/about ">关于 </a>
+            </li>
+            
+            
+        </ul>
+        <ul class="sub-nav-list">
+            
+            <li class="sub-nav-item">
+                <a target="_blank" rel="noopener" href="https://github.com/vhvy " aria-label="github" title="github" style="background-image: url(https://i.loli.net/2020/11/15/KgnCLhyWJaYpX3U.png);background-color: #fff;background-position: 40%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="mailto:vhvy@qq.com " aria-label="email" title="email" style="background-image: url(https://i.loli.net/2020/11/15/ZGnqMQsFutvEcdb.png);background-color: #fff;background-size: 70%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="/rss.xml " aria-label="rss" title="rss" style="background-image: url(https://i.loli.net/2020/11/15/mkNMb9soJOVTQWL.png);background-color: #ef7522;background-size: 65%"></a>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+        <main class="body-box" style="margin-left: 300px;">
+            <article class="container">
+                
+<link rel="stylesheet" href="/css/content.css">
+ 
+
+    
+    <link rel="stylesheet"
+        href="//cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css">
+    
+
+
+<div class="content-box">
+    <div class="meta">
+    <div class="date">
+        <time>Aug 08, 2019</time>
+    </div>
+</div>
+
+    <h1 class="title">博客现已用React重写</h1>
+    <div class="content">
+         
+        
+             
+            <p class="expired-tips">提醒：本文最后更新于 489 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        
+        <h2 id="伊始"><a href="#伊始" class="headerlink" title="伊始"></a>伊始</h2><p>6月份照着EYHN的博客<a target="_blank" rel="noopener" href="https://huaji8.top/">幻想贴</a>，用原生JS和MDUI完成了博客。</p>
+<p>到了上个月也就是7月份时打算学习React，于是准备用React重写一遍博客。</p>
+<p>看了一点React的官方文档，有点头痛，于是找到B站UP主<a target="_blank" rel="noopener" href="https://space.bilibili.com/19140779">marking1212</a>翻译、<a target="_blank" rel="noopener" href="https://www.youtube.com/user/programmingwithmosh">mosh</a>制作的React教程<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av34619096">av34619096</a>，大致了解了React的使用方法后，开撸！</p>
+<h2 id="Material-UI"><a href="#Material-UI" class="headerlink" title="Material-UI"></a>Material-UI</h2><p>我保证Material是我这半个月来背的最熟的单词，因为这半个月我不知道搜索了多少次Material-UI相关的问题。</p>
+<p>之前博客使用的是MDUI，这次决定使用很🔥的Material-UI。使用这个UI框架可是让我吃尽了苦头，很多API并没有在文档里写出来，需要自己在官网DEMO里一点点找，这一点我在Stackoverflow上也看到很多人吐槽。</p>
+<h2 id="React"><a href="#React" class="headerlink" title="React"></a>React</h2><p>React用起来非常的爽快，只关心数据的加载，再不用去操作DOM了。</p>
+<p>不过在这次开始使用React之前，我只是一个学习了半年JS的编程菜鸟，完全没有使用原生JS编写完整项目的经验；哦对了，如果之前用原生JS编写的博客也算完整项目的话…</p>
+<p>我很担心我赢弱的原生JS基础，会成为以后的一块绊脚石。现在的我对象这块还是非常不熟悉的，诸如工厂模式，原型链什么的。阿呀，都是过去欠下的债，现在需要一一偿还了。</p>
+<p>扯远了，在开始撸码之前，发现React有了一个很有意思的新特性 — Hooks。</p>
+<p>大致过滤了一遍之后，我就全面抛弃了之前的<code>Class App extend React.Component</code>这种写法，再也不用写<code>componentDidMount</code>和<code>this.setState</code>这种啰嗦的语法了…</p>
+<p>哈哈哈，开玩笑，从我大致接触React到知道Hooks特性为止，我写过的React代码不超过100行，可以说我写React就是直接用Hooks开始的。</p>
+<p><code>useState</code>这个hook返回一个包含两个元素的数组，可以用解构赋值的方法将其解构出来;</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> useState <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">"React"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>open<span class="token punctuation">,</span> setOpen<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token operator">...</span>
+
+    <span class="token function">setOpen</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// setOpen(open => !open);</span>
+
+    <span class="token operator">...</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这两个元素我们可以随意命名，其中第一个元素就是我们需要的state，它的初始值是调用useState方法时传入的参数；</p>
+<p>第二个元素是用来修改第一个元素值的方法，使用方法如上图;</p>
+<p><code>useEffect</code>可以看作是将之前的几个不同生命周期合而为一的产物，它接受两个参数，第一个参数为函数，第二个参数为数组，当数组里的值发生变化时，它会执行传入的第一个函数。</p>
+<p>具体使用方法可以看官网文档，我这里只写出我最常用的场景。</p>
+<p>开局一条狗，装备全靠打！</p>
+<p>咳咳走错片场了…</p>
+<hr>
+<p>在页面初始化时异步获取数据:</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> useState<span class="token punctuation">,</span> useEffect <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">"React"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> http <span class="token keyword">from</span> <span class="token string">"./tools"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">Home</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>postList<span class="token punctuation">,</span> setPostList<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getPost</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> data<span class="token punctuation">,</span> status <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token keyword">await</span> http<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"https://example.com/api/post"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>status <span class="token operator">===</span> <span class="token number">200</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token function">setPostList</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token operator">...</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        <span class="token function">getPost</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token operator">...</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>如果只需要在组件第一次挂载时执行一次，而此后不需要再次执行，那么第二个参数为空数组即可。</p>
+<blockquote>
+<p>另外第一个参数不能是异步函数，只能将异步操作写成函数再调用。</p>
+</blockquote>
+<hr>
+<p>切换城市时切换相应城市的天气：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span> useState<span class="token punctuation">,</span> useEffect <span class="token punctuation">&#125;</span> <span class="token keyword">from</span> <span class="token string">"React"</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> http <span class="token keyword">from</span> <span class="token string">"./tools"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">&#123;</span>cityList<span class="token punctuation">&#125;</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>weather<span class="token punctuation">,</span> setWeather<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>city<span class="token punctuation">,</span> setCity<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token string">'上海'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">function</span> <span class="token function">toggleCity</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">&#123;</span>currentTarget<span class="token punctuation">&#125;</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token operator">...</span>
+        <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> value <span class="token punctuation">&#125;</span> <span class="token operator">=</span> currentTarget<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token operator">...</span>
+            <span class="token operator">...</span>
+            <span class="token function">setCity</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getWeather</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> data<span class="token punctuation">,</span> status <span class="token punctuation">&#125;</span> <span class="token operator">=</span> http<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://example.com/api/city=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>city<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>status <span class="token operator">===</span> <span class="token number">200</span><span class="token punctuation">)</span> <span class="token function">setWeather</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        <span class="token function">getWeather</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>city<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+        <span class="token operator">&lt;</span>div<span class="token operator">></span>
+            <span class="token punctuation">&#123;</span>
+                cityList <span class="token operator">&amp;&amp;</span> cityList<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">i<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token operator">=></span> 
+                    <span class="token operator">&lt;</span>button 
+                        key<span class="token operator">=</span><span class="token punctuation">&#123;</span>index<span class="token punctuation">&#125;</span>
+                        value<span class="token operator">=</span><span class="token punctuation">&#123;</span>i<span class="token punctuation">&#125;</span>
+                        onClick<span class="token operator">=</span><span class="token punctuation">&#123;</span>toggleCity<span class="token punctuation">&#125;</span>
+                    <span class="token operator">></span>
+                        <span class="token punctuation">&#123;</span>i<span class="token punctuation">&#125;</span>
+                    <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">></span>
+                <span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#123;</span>
+                Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>city<span class="token punctuation">)</span><span class="token punctuation">.</span>length <span class="token operator">!==</span> <span class="token number">0</span> 
+                <span class="token operator">&amp;&amp;</span> 
+                <span class="token operator">&lt;</span>div<span class="token operator">></span>
+                    <span class="token punctuation">&#123;</span>
+                        <span class="token operator">...</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="是抄袭吗"><a href="#是抄袭吗" class="headerlink" title="是抄袭吗"></a>是抄袭吗</h2><p>没错了，是抄袭。</p>
+<p>这个博客样式、布局完全抄袭自EYHN的<a target="_blank" rel="noopener" href="https://huaji8.top/">幻想贴</a>，不过代码什么的完全是我自己编写的，力图做到还原度100%。</p>
+<p>之前用原生JS写的博客还原度只有90%的样子，细节方面还差的远。</p>
+<p>这次使用React重写后，还原度个人感觉已经达到了97%，其他地方的细节有点棘手无从下手，待以后水平提高后再来完善吧。</p>
+<h2 id="新功能"><a href="#新功能" class="headerlink" title="新功能"></a>新功能</h2><p>在<a target="_blank" rel="noopener" href="https://huaji8.top/">幻想贴</a>基础上添加了以下功能：</p>
+<pre><code>分页组件
+标签组件
+分类组件
+全局快捷按钮组件</code></pre>
+<p>总感觉我的博客页面非常卡，有待后续优化，不过得等我功力大增之后了。</p>
+
+    </div>
+</div>
+
+<div class="pagination">
+    
+        <a href="/2019/09/06/使用Debian做路由器/" class="link prev">使用Debian做路由器</a>
+    
+    
+        <a href="/2019/06/14/博客今天完工了/" class="link next">博客今天完工了</a>
+    
+</div>
+            </article>
+            <footer class="footer">
+    <p class="copyright">©️ 2018 - 2020 海天共秋水一色</p>
+    <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
+</footer>
+        </main>
+    </div>
+</body>
+
+</html>

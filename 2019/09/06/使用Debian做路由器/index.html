@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<link rel="stylesheet" href="/css/main.css">
+
+    <title>
+    
+        使用Debian做路由器 - 
+     
+    海天共秋水一色
+</title>
+    <link rel="alternate" href="/rss.xml" type="application/atom+xml">
+    <link rel="shortcut icon" href="/favicon.ico">
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+    <div id="root">
+        <aside class="aside-wrap" style="background-image: url(https://i.loli.net/2020/12/08/oQ6CXL43HDWpB2I.jpg); width: 300px">
+    <img src="https://i.loli.net/2020/12/08/mKOT8BgjFwbof4p.jpg" class="user-avatar" alt="avatar"> 
+
+    <div class="nav-wrap">
+        <h1 class="author">vhvy</h1>
+        <p class="subtitle">迟点也可以的。</p>
+        <ul class="nav-list">
+            
+            
+            <li class="nav-item">
+                <a href="/ ">首页 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/categories ">分类 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/tags ">标签 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/chaos ">混沌 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/archives ">归档 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/blogroll ">友链 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/about ">关于 </a>
+            </li>
+            
+            
+        </ul>
+        <ul class="sub-nav-list">
+            
+            <li class="sub-nav-item">
+                <a target="_blank" rel="noopener" href="https://github.com/vhvy " aria-label="github" title="github" style="background-image: url(https://i.loli.net/2020/11/15/KgnCLhyWJaYpX3U.png);background-color: #fff;background-position: 40%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="mailto:vhvy@qq.com " aria-label="email" title="email" style="background-image: url(https://i.loli.net/2020/11/15/ZGnqMQsFutvEcdb.png);background-color: #fff;background-size: 70%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="/rss.xml " aria-label="rss" title="rss" style="background-image: url(https://i.loli.net/2020/11/15/mkNMb9soJOVTQWL.png);background-color: #ef7522;background-size: 65%"></a>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+        <main class="body-box" style="margin-left: 300px;">
+            <article class="container">
+                
+<link rel="stylesheet" href="/css/content.css">
+ 
+
+    
+    <link rel="stylesheet"
+        href="//cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css">
+    
+
+
+<div class="content-box">
+    <div class="meta">
+    <div class="date">
+        <time>Sep 06, 2019</time>
+    </div>
+</div>
+
+    <h1 class="title">使用Debian做路由器</h1>
+    <div class="content">
+         
+        
+             
+            <p class="expired-tips">提醒：本文最后更新于 460 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        
+        <h2 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h2><p>以前一直使用RouterOS，最近更新之后遇到了一些严重的BUG，决定把它换成Linux，免费并且可以顺便学习一下Linux。</p>
+<p>Debian作为最正统的发行版，我对它一直很有好感，前几天Debian 10刚好也发布了，那么就选它吧！</p>
+<p>开工之前先要明确目标，不然就是瞎干了。</p>
+<p>查了半天资料后整理出来以下：</p>
+<pre class="line-numbers language-none"><code class="language-none">* Debian 路由器是核心路由器，只关心数据的转发，不做任何其他事情。
+* &#96;pppoeconf&#96;实现PPPoE拨号上网。
+* &#96;wide-dhcpv6-client&#96;从运营商那里获取IPv6前缀。
+* &#96;ipset&#96;建立国内IP地址集合，以供iptables使用。
+* &#96;iptables&#96;进行NAT以及对非国内地址的连接进行标记，供&#96;ip rule(策略路由)&#96;使用。
+* &#96;dnsmasq&#96;作为DNS服务器以及DHCP服务器。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="开工"><a href="#开工" class="headerlink" title="开工"></a>开工</h2><p>我是在ESXI中运行路由系统的，安装过程不再赘述，这些都是基本操作了。</p>
+<p>我先大概描述一下我的网络环境，诸位观看(真的有人吗?)理解时也会更容易。</p>
+<p>暂时是用RouterOS上网的，等Debian 配置完成后就会关闭RouterOS，使用Debian作为网关路由器。</p>
+<p><img src="/data/images/2019-09-0610.33.28.png" alt="img"></p>
+<p>建议刚装完时先连接上别的网络，因为需要安装各种包以及更新。等<code>pppoe</code>连接上以后就可以直接使用<code>pppoe</code>上网了，</p>
+<p>开启免密登录，不然每次输入密码登录debian非常麻烦，在自己的电脑上生成自己的key，然后cat ~/.ssh/id_rsa.pub，复制之后切换到Debian的终端，然后</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"你的key"</span> <span class="token operator">>></span> ~/.ssh/authorized_keys<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>安装完成后先换源，建议使用清华源，切换到root然后<code>apt update &amp;&amp; apt upgrade &amp;&amp; apt install sudo</code>三连警告。</p>
+<p>一些常用工具装上，方便调试。</p>
+<pre class="line-numbers language-none"><code class="language-none">apt install dnsutils wget curl vim<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>Debian 10安装完成后普通用户是没有sudo权限的，我们需要去给它加上sudo权限。虽然待会安装过程中全程使用root账户，但是还是加上舒服一点。</p>
+<p>切换到root账户，然后输入visudo，添加一行代码，顺便把默认编辑器改成vim。</p>
+<pre class="line-numbers language-none"><code class="language-none">Defaults        editor&#x3D;&#x2F;usr&#x2F;bin&#x2F;vim  # 改成这样
+
+...
+
+root    ALL&#x3D;(ALL:ALL) ALL # 没错就是在这行下面👇添加
+user    ALL&#x3D;(ALL:ALL) ALL # user替换成你的用户名<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>安装的vim默认开启了可视化，想用鼠标复制个东西很困难，所以需要关闭vim可视化，在<code>/etc/vim/vimrc</code>最后添加两行代码:</p>
+<pre class="line-numbers language-none"><code class="language-none">set mouse&#x3D;
+set ttymouse&#x3D;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>接下来设置网卡IP地址:</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;network&#x2F;interface
+
+auto eth1
+iface eth1 inet static
+    address 10.1.1.254&#x2F;24
+    gateway 10.1.1.233 # 这行只是为了临时上网，待pppoe设置完成之后删除这行
+
+iface eth1 inet6 
+    address dd11:1111:1111::1&#x2F;48
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>接下来需要开启内核转发，<code>vim /etc/sysctl.conf</code></p>
+<p>添加如下内容：</p>
+<pre class="line-numbers language-none"><code class="language-none">net.ipv4.ip_forward&#x3D;1
+net.ipv6.conf.all.forwarding&#x3D;1
+net.ipv6.conf.ppp0.accept_ra&#x3D;2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>然后执行<code>sysctl -p /etc/sysctl.conf</code></p>
+<h2 id="PPPoE"><a href="#PPPoE" class="headerlink" title="PPPoE"></a>PPPoE</h2><p>首先需要安装<code>pppoeconf</code>来进行pppoe拨号：</p>
+<pre class="line-numbers language-none"><code class="language-none">apt install pppoeconf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>安装过程中会出现设置向导，按照指引输入账号密码和对应的网卡接口就可以设置完成。</p>
+<p>设置完成后输入<code>ip a</code>就可以看到<code>pppoe</code>已经成功拨号。</p>
+<p><img src="/data/images/WX20190906-114940@2x.png" alt="img"></p>
+<p>此时它会在<code>/etc/ppp/peers/</code>下生成一个<code>dsl-provider</code>文件，里面包含了拨号用的各种配置信息。</p>
+<p>此时我们可以用<code>pon dsl-provider</code>和<code>poff</code>进行<code>pppoe</code>的连接和断开，但是这么做也太不优雅了，而且以后管理起来也不甚方便，所以我们为它制作一个<code>systemd</code>服务。</p>
+<p>首先删除<code>/etc/network/interface</code>文件里pppoe自动添加的配置，由于我已经删掉了相关代码片段，所以就无法上图了，诸位自行删除就好，以<code>auto ppp0</code>开头的就是，同时旁边有注释表明此段配置信息由<code>pppoeconf</code>自动生成。</p>
+<p>删除后我们来制作<code>pppoe.serivce</code>：</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;pppoe.service<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>内容如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">[Unit]
+Description&#x3D;PPPoE connection
+Before&#x3D;wide-dhcpv6-client.service
+[Service]
+Type&#x3D;oneshot
+RemainAfterExit&#x3D;true
+ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;pon dsl-provider
+ExecStop&#x3D;&#x2F;usr&#x2F;bin&#x2F;poff -a
+
+[Install]
+WantedBy&#x3D;default.target<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>文件里<code>[Unit]</code>字段中的<code>Before=wide-dhcpv6-client.service</code>是为了让<code>pppoe.serive</code>在请求ipv6前缀服务之前启动，否则请求ipv6前缀服务会失败，我们下面会详细讲解。</p>
+<p>写入之后用<code>systemctl daemon-reload </code>命令重新加载systemd，此时就可以用<code>systemctl start pppoe</code>和<code>systemctl stop pppoe</code>进行管理了，另外这里记得使用<code>systemctl enable pppoe</code>使它开机自启动。</p>
+<p>现在我们就可以将<code>/etc/network/interface</code>中网关那一行删掉了，现在我们不需要它就可以上网了。</p>
+<h2 id="请求IPv6前缀"><a href="#请求IPv6前缀" class="headerlink" title="请求IPv6前缀"></a>请求IPv6前缀</h2><p>首先要安装相应的包：<code>apt install wide-dhcpv6-client</code>，然后为修改配置文件：</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;wide-dhcpv6&#x2F;dhcp6c.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>内容如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">interface ppp0 &#123;
+    send ia-pd 0;
+&#125;;
+
+id-assoc pd 0 &#123;
+    prefix-interface eth0 &#123;
+        sla-id 1;
+        sla-len 0;
+    &#125;;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上述配置文件中<code>eth0</code> 是我用来拨号的物理接口，<code>sla-len</code>视前缀情况而定，总之这个数字和你的前缀相加要等于64，电信给我的前缀是<code>::/64</code>，我这里就填0；如果你的是<code>::/56</code>，那么你这里就填8;</p>
+<p>接下来使用<code>systemctl start wide-dhcpv6-client</code>进行获取前缀，待命令执行结束使用<code>ip a</code>命令就可以看到ipv6地址已经下发成功。</p>
+<p>使用<code>systemctl enable wide-dhcpv6-client</code>实现开机自启动，但是我这里有点坑，重启后发现这个服务会启动失败，查看失败原因是因为<code>ppp0</code>接口不存在?!</p>
+<p>可是我明明写了<code>Before</code>让这个服务在<code>pppoe</code>服务之后启动，用了一些其他技巧也着实证明了启动顺序没错，百思不得其解之后我用了最简单粗暴的方法-<code>延时启动</code>。</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;init.d&#x2F;wide-dhcpv6-client<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>在启动脚本之前让它睡上8秒:</p>
+<pre class="line-numbers language-none"><code class="language-none">STOP_RETRY_SCHEDULE&#x3D;&#39;TERM&#x2F;20&#x2F;forever&#x2F;KILL&#x2F;1&#39;
+
+. &#x2F;lib&#x2F;lsb&#x2F;init-functions
+
+test -x $DHCP6CBIN || exit 0
+
+sleep 8  # 没错，就是在这里念咒语让它睡8秒。
+
+if [ ! -f &#x2F;etc&#x2F;default&#x2F;wide-dhcpv6-client ]; then
+    exit 0
+else
+    . &#x2F;etc&#x2F;default&#x2F;wide-dhcpv6-client
+fi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在，开机之后可以正常请求到IPv6前缀了。</p>
+<p>电信很多地方每隔48或者72小时会强行掉线一次，之后我们又需要手动重启<code>wide-dhcpv6-client</code>服务，所以我们搞个脚本让它凌晨2点自动重新拨号并获取IPv6前缀。</p>
+<pre class="line-numbers language-none"><code class="language-none">
+vim &#x2F;root&#x2F;tools&#x2F;autoConnect.sh
+
+
+#!&#x2F;bin&#x2F;bash
+systemctl restart pppoe
+systemctl restart wide-dhcpv6-client<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后使用<code>crontab -e</code>添加脚本:</p>
+<pre class="line-numbers language-none"><code class="language-none">0 2 * * * &#x2F;bin&#x2F;bash &#x2F;root&#x2F;tools&#x2F;autoConnect.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="dnsmasq"><a href="#dnsmasq" class="headerlink" title="dnsmasq"></a>dnsmasq</h2><p>首先安装<code>dnsmasq</code>： </p>
+<pre class="line-numbers language-none"><code class="language-none">apt install dnsmasq<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><code>dnsmasq</code>的配置文件放在<code>/etc/dnsmasq.d</code>下面，以<code>.conf</code>结尾的配置文件会被<code>dnsmasq</code>解析，而<code>dnsmasq</code>的配置模版文件在<code>/etc/dnsmasq.conf</code>，关于配置文件我就不再赘述，网上有很多详解，我这里展示一下我的配置文件。</p>
+<pre class="line-numbers language-none"><code class="language-none">cat &#x2F;etc&#x2F;dnsmasq.d&#x2F;custom.dnsmasq.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>内容如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">interface&#x3D;eth1
+bind-interfaces
+dhcp-range&#x3D;eth1,10.1.1.100,10.1.1.140,255.255.255.0,12h
+dhcp-range&#x3D;eth1,::1,constructor:eth1,ra-names,12h
+listen-address&#x3D;127.0.0.1,10.1.1.254,dd78:1111:1111::1,::1
+port&#x3D;53
+server&#x3D;1.2.4.8
+server&#x3D;114.114.114.114
+enable-ra
+
+# Option
+dhcp-option&#x3D;option:netmask,255.255.255.0
+dhcp-option&#x3D;option:router,10.1.1.254
+dhcp-option&#x3D;option:dns-server,10.1.1.254,1.2.4.8,114.114.114.114
+dhcp-option&#x3D;option6:dns-server,[dd78:1111:1111::1]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在我们可以将RouterOS关闭了，debian已基本配置完成，我们设置NAT之后就可以上网了。</p>
+<p>使用<code>systemctl restart dnsmasq</code>重新启动dnsmasq，开机启动服务的指令相比我也不用在重复了。</p>
+<h2 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h2><p>电脑现在还不能上网，先配置两条规则，让电脑可以上网：</p>
+<pre class="line-numbers language-none"><code class="language-none">iptables -t nat -A POSTROUTING -s 10.1.1.0&#x2F;24 -o ppp0 -j MASQUERADE
+ip6tables -t nat -A POSTROUTING -s dd78:1111:1111::&#x2F;48 -j MASQUERADE<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>iptables规则生成之后是在内存里的，重启之后会失效，我们需要一个守护程序来保存iptables规则，并且在开机时恢复规则。</p>
+<pre class="line-numbers language-none"><code class="language-none">apt install iptables-persistent<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+<p>然后我们将规则保存在这里：</p>
+<pre class="line-numbers language-none"><code class="language-none">iptables-save &gt; &#x2F;etc&#x2F;iptables&#x2F;rules.v4
+ip6tables-save &gt; &#x2F;etc&#x2F;iptables&#x2F;rules.v6<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>将此服务设置为开机启动后，它会自动从这两个文件读取配置信息。</p>
+<p>另外<code>iptables-persistent</code>安装后用systemctl管理时，名称为<code>netfilter-persistent</code>，我刚开始设置开机启动时提示没有这个服务也是摸不着头脑，查了半天才知道安装之后是叫这个名字。</p>
+<h2 id="ipset"><a href="#ipset" class="headerlink" title="ipset"></a>ipset</h2><p>现在基本配置完成，但是我们需要分流国内外流量，将国外IP流量定向至另一条线路进行加速，所以我们需要用ipset维护一个国内IP列表。</p>
+<p>首先安装ipset:</p>
+<pre class="line-numbers language-none"><code class="language-none">apt install ipset<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>首先创建一个非公网地址的列表，后面有用得到，代码如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">ipset create localIPv4 hash:net
+ipset add localIPv4 10.0.0.0&#x2F;8
+ipset add localIPv4 172.16.0.0&#x2F;12
+ipset add localIPv4 192.168.0.0&#x2F;16
+ipset add localIPv4 100.64.0.0&#x2F;10
+
+ipset save &gt; &#x2F;etc&#x2F;ipset&#x2F;ipset.conf  # 保存到文件里<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>ipset列表保存之后保存在内存里，我们需要一个服务来让它开机读取文件恢复列表。</p>
+<p>代码如下:</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;ipset.service
+
+
+[Unit]
+Description&#x3D;ipset persistent rule service
+Before&#x3D;iptables.service netfilter-persistent.service
+[Service]
+Type&#x3D;oneshot
+RemainAfterExit&#x3D;yes
+ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;ipset restore -f &#x2F;etc&#x2F;ipset&#x2F;ipset.conf
+ExecStop&#x3D;&#x2F;usr&#x2F;sbin&#x2F;ipset save &gt; &#x2F;etc&#x2F;ipset&#x2F;ipset.conf
+[Install]
+WantedBy&#x3D;multi-user.target<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后systemctl三连:</p>
+<pre class="line-numbers language-none"><code class="language-none">systemctl daemon-reload
+systemctl enable ipset
+systemctl start ipset<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>还需要将中国大陆的IP段写入ipset，这里我搞了个脚本，可以直接拿去使用。</p>
+<pre class="line-numbers language-none"><code class="language-none">#!&#x2F;bin&#x2F;bash
+
+curl &#39;http:&#x2F;&#x2F;ftp.apnic.net&#x2F;apnic&#x2F;stats&#x2F;apnic&#x2F;delegated-apnic-latest&#39; | grep CN &gt; &#x2F;tmp&#x2F;cnIP.txt
+
+# Test IPv4 list
+
+ipError&#x3D;&quot;NOT&quot;
+listError&#x3D;&quot;not exist&quot;
+result&#x3D;$(ipset list cnIPv4 2&gt;&amp;1)
+
+if [[ $result &#x3D;~ $listError ]]
+then
+    ipset create cnIPv4 hash:net
+    echo &quot;cnIPv4集合不存在,已创建!&quot;
+else
+    ipset flush cnIPv4
+    echo &quot;cnIPv4集合存在,已清空!&quot;
+fi
+
+# Update IPv4 List
+cat &#x2F;tmp&#x2F;cnIP.txt | grep ipv4 | awk -F\| &#39;&#123; printf(&quot;%s&#x2F;%d\n&quot;, $4, 32-log($5)&#x2F;log(2)) &#125;&#39; &gt; &#x2F;tmp&#x2F;cnIPv4.txt
+cat &#x2F;tmp&#x2F;cnIPv4.txt | while read line
+do
+    result&#x3D;$(ipset test cnIPv4 $line 2&gt;&amp;1)
+    if [[ $result &#x3D;~ $ipError ]]
+    then
+	    ipset add cnIPv4 $line
+    fi
+done
+echo &quot;cnIPv4更新完毕!!&quot;
+rm &#x2F;tmp&#x2F;cnIPv4.txt
+
+# Test IPv6 List
+
+result&#x3D;$(ipset list cnIPv6 2&gt;&amp;1)
+
+if [[ $result &#x3D;~ $listError ]]
+then
+    ipset create cnIPv6 hash:net family inet6
+    echo &quot;cnIPv6集合不存在,已创建!&quot;
+else
+    ipset flush cnIPv6
+    echo &quot;cnIPv6集合存在,已清空!&quot;
+fi
+
+# Update IPv6 List
+cat &#x2F;tmp&#x2F;cnIP.txt | grep ipv6 | awk -F\| &#39;&#123; printf(&quot;%s&#x2F;%d\n&quot;, $4, 32-log($5)&#x2F;log(2)) &#125;&#39; &gt; &#x2F;tmp&#x2F;cnIPv6.txt
+cat &#x2F;tmp&#x2F;cnIPv6.txt | while read line
+do
+    result&#x3D;$(ipset test cnIPv6 $line 2&gt;&amp;1)
+    if [[ $result &#x3D;~ $ipError ]]
+    then
+        ipset add cnIPv6 $line
+    fi
+done
+echo &quot;cnIPv6更新完毕!!&quot;
+rm &#x2F;tmp&#x2F;cnIPv6.txt
+rm &#x2F;tmp&#x2F;cnIP.txt
+
+# Save to files
+ipset save &gt; &#x2F;etc&#x2F;ipset&#x2F;ipset.conf
+echo &quot;ipset已写入文件!!!&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="策略路由"><a href="#策略路由" class="headerlink" title="策略路由"></a>策略路由</h2><p>内网有一台代理服务器，我们将所有去往国内的流量全部交给这台代理服务器，这里就需要做策略路由。</p>
+<p>同时因为为了防止浪费流量，只将需要加速的设备流量转发给代理服务器，所以还需要维护一个ipset列表，将这些设备IP地址放进去。</p>
+<p>代码如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">ipset create goWorld hash:net
+ipset add goWorld 10.1.1.22  ##自行输入你的设备ip地址<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>然后添加一个路由表：</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;iproute2&#x2F;rt_tables
+
+
+252 goProxy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>局域网代理服务器地址为10.1.1.88。</p>
+<p>然后添加一条路由：</p>
+<pre class="line-numbers language-none"><code class="language-none">ip route add default via 10.1.1.88 table goProxy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后在iptables防火墙里对这些设备流量进行标记，并将这些设备的dns请求转发给代理服务器：</p>
+<pre class="line-numbers language-none"><code class="language-none">iptables -t mangle -A PREROUTING -m set --match-set goWorld src -m set ! --match-set localIPv4 dst -m set ! --match-set cnIPv4 dst -j MARK --set-mark 20
+
+iptables -t nat -A PREROUTING -p udp --dport 53 -m set --match-set goWorld src -j DNAT  --to-destination 10.1.1.88:53
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>记得用<code>iptables-save &gt; /etc/iptables/rules.v4</code>进行保存！</p>
+<p>然后添加策略路由:</p>
+<pre class="line-numbers language-none"><code class="language-none">ip rule add fwmark 20 table goProxy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>需要注意这些路由也是保存在内存的，为了让它永久生效，需要将它写进网卡配置文件里：</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;etc&#x2F;network&#x2F;interface
+
+...
+
+auto eth1
+iface eth1 inet static
+    address 10.1.1.254&#x2F;24
+    up ip route add default via 10.1.1.88 table goProxy
+    down ip route del default via 10.1.1.88 table goProxy
+    up ip rule add fwmark 20 table goProxy
+    down ip rule del fwmark 20 table goProxy<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在，去往国外的流量就全部走了代理服务器，安装npm包的时候再也不用等个十分钟啦！万岁！</p>
+<h2 id="ip6tables"><a href="#ip6tables" class="headerlink" title="ip6tables"></a>ip6tables</h2><p>ipv6代理和ipv4是一个套路，我就不再赘述了。</p>
+<p>另外我IPv6的代理搭建完毕后，发现速度还是非常差劲，不如IPv4，我就直接不用IPv6了。</p>
+<p>注意这里的IPv6不是说完全不用，只是在防火墙上将去往国外的IPv6流量全部reject掉，这样程序就会乖乖的使用IPv4，而国内IPv6速度尚可，完全不用关闭它。</p>
+<p>return这里我实验了很多次才调试好，很多程序在使用防火墙drop时会立刻回落到IPv4，有些程序在reject时才会立刻回落到IPv4，搞得人很是头大，最后的试验出的具体规则如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">ip6tables -A FORWARD -m set ! --match-set cnIPv6 dst ! -d dd78:1111:1111::&#x2F;48 -j REJECT --reject-with icmp6-adm-prohibited<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="DDNS"><a href="#DDNS" class="headerlink" title="DDNS"></a>DDNS</h2><p>这里我也写了一个现成的shell脚本，我放在了<a target="_blank" rel="noopener" href="https://github.com/vhvy/namesilo-ddns">github</a>上，有需要请自取。</p>
+
+    </div>
+</div>
+
+<div class="pagination">
+    
+    
+        <a href="/2019/08/08/博客现已用React重写/" class="link next">博客现已用React重写</a>
+    
+</div>
+            </article>
+            <footer class="footer">
+    <p class="copyright">©️ 2018 - 2020 海天共秋水一色</p>
+    <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
+</footer>
+        </main>
+    </div>
+</body>
+
+</html>
