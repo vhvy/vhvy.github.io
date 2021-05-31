@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<link rel="stylesheet" href="/css/main.css">
+
+    <title>
+    
+        实现一个简单的横向滑动菜单栏 - 
+     
+    冷的我不想打AD
+</title>
+    <link rel="alternate" href="/rss.xml" type="application/atom+xml">
+    <link rel="shortcut icon" href="/favicon.ico">
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="root">
+        <aside class="aside-wrap" style="background-image: url(https://i.loli.net/2020/12/08/oQ6CXL43HDWpB2I.jpg); width: 300px">
+    <img src="https://i.loli.net/2020/12/08/mKOT8BgjFwbof4p.jpg" class="user-avatar" alt="avatar"> 
+
+    <div class="nav-wrap">
+        <h1 class="author">vhvy</h1>
+        <p class="subtitle">刀斩肉身，心斩灵魂。</p>
+        <ul class="nav-list">
+            
+            
+            <li class="nav-item">
+                <a href="/ ">首页 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/categories ">分类 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/tags ">标签 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/chaos ">混沌 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/archives ">归档 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/blogroll ">友链 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/about ">关于 </a>
+            </li>
+            
+            
+        </ul>
+        <ul class="sub-nav-list">
+            
+            <li class="sub-nav-item">
+                <a target="_blank" rel="noopener" href="https://github.com/vhvy " aria-label="github" title="github" style="background-image: url(https://i.loli.net/2020/11/15/KgnCLhyWJaYpX3U.png);background-color: #fff;background-position: 40%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="mailto:vhvy@qq.com " aria-label="email" title="email" style="background-image: url(https://i.loli.net/2020/11/15/ZGnqMQsFutvEcdb.png);background-color: #fff;background-size: 70%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="/rss.xml " aria-label="rss" title="rss" style="background-image: url(https://i.loli.net/2020/11/15/mkNMb9soJOVTQWL.png);background-color: #ef7522;background-size: 65%"></a>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+        <main class="body-box" style="margin-left: 300px;">
+            <article class="container">
+                
+<link rel="stylesheet" href="/css/content.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css">
+
+
+
+<div class="content-box">
+    <div class="meta">
+    <div class="date">
+        <time>May 30, 2021</time>
+    </div>
+</div>
+
+    <h1 class="title">实现一个简单的横向滑动菜单栏</h1>
+    <div class="content">
+        
+        
+            
+<link rel="stylesheet" href="/css/toc-box.css">
+
+            <div id="toc-wrap">
+                <p>
+                    <strong>文章目录</strong>
+                </p>
+
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%8A%A8%E6%95%88"><span class="toc-text">分析动效</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-text">实现基本结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E7%A4%BA%E5%99%A8"><span class="toc-text">指示器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BB%9A%E5%8A%A8%E8%87%B3%E9%A1%B5%E9%9D%A2%E4%B8%AD%E9%97%B4"><span class="toc-text">滚动至页面中间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%8C%87%E7%A4%BA%E5%99%A8%E4%BD%8D%E7%BD%AE"><span class="toc-text">修复指示器位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B3%E6%BB%91%E6%BB%9A%E5%8A%A8"><span class="toc-text">平滑滚动</span></a></li></ol>
+            </div>
+        
+        
+        
+        <p>两年多没写过博客了，我也不知道都在忙什么，以后还是要坚持写博客的，起码把自己的一些想法记录下来。</p>
+<p>前两天突然很好奇一个很常见的动效是怎么实现的，今天有空了就花了一会时间将它实现了一遍。</p>
+<p><img src="https://i.loli.net/2021/05/30/mIDUzAL2nGa1Ste.gif" alt="Kapture 2021-05-30 at 22.24.29.gif"></p>
+<p>最终效果DEMO: <a target="_blank" rel="noopener" href="https://vhvy-demo.netlify.app/horizontal-scroll">https://vhvy-demo.netlify.app/horizontal-scroll</a></p>
+<p>代码地址: <a target="_blank" rel="noopener" href="https://github.com/vhvy/some-demo/tree/master/horizontal-scroll">https://github.com/vhvy/some-demo/tree/master/horizontal-scroll</a></p>
+<h2 id="分析动效"><a href="#分析动效" class="headerlink" title="分析动效"></a>分析动效</h2><p>从效果图上可以看出，这一个文字内容不定长的Tab列表；点击tab项时tab会被高亮，并将tab滚动到屏幕正中间，同时tab下方的指示条在经过短暂的延迟后滑动到当前选中的tab下。</p>
+<h2 id="实现基本结构"><a href="#实现基本结构" class="headerlink" title="实现基本结构"></a>实现基本结构</h2><p>为了方便演示我用Vue直接做的，先实现最基本的部分。循环tab数据项，将每个子tab项的index绑定到dataset，同时在列表外层容器上代理监听点击事件，并更新相应的idx; idx匹配的tab将进行高亮处理。</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>root<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>nav</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-nav-wrap<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>nav_box<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-nav-list<span class="token punctuation">"</span></span> <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>handleNavClick<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-nav-item<span class="token punctuation">"</span></span> <span class="token attr-name">:data-idx</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>index<span class="token punctuation">"</span></span> <span class="token attr-name">:class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>&#123; active: index == activeNavIdx &#125;<span class="token punctuation">"</span></span> <span class="token attr-name">ref</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>navs<span class="token punctuation">"</span></span>
+                <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>(item, index) of menus<span class="token punctuation">"</span></span> <span class="token attr-name">:key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>item.id<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>&#123;&#123; item.name &#125;&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>nav</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">
+<span class="token keyword">const</span> menus <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">&#123;</span>
+        id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+        name<span class="token operator">:</span> <span class="token string">"首页"</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token operator">...</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+    el<span class="token operator">:</span> <span class="token string">"#root"</span><span class="token punctuation">,</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+            menus<span class="token punctuation">,</span>
+            activeNavIdx<span class="token operator">:</span> <span class="token number">0</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    methods<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">handleNavClick</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">&#123;</span> target <span class="token punctuation">&#125;</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">const</span> <span class="token punctuation">&#123;</span> idx <span class="token punctuation">&#125;</span> <span class="token operator">=</span> target<span class="token punctuation">.</span>dataset<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>idx <span class="token operator">||</span> idx <span class="token operator">==</span> <span class="token keyword">this</span><span class="token punctuation">.</span>activeNavIdx<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>activeNavIdx <span class="token operator">=</span> idx<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="指示器"><a href="#指示器" class="headerlink" title="指示器"></a>指示器</h2><p>指示器可以用tab容器<code>ul</code>的<code>::after</code>伪元素来做，相对于tab容器进行绝对定位，<code>bottom</code>的位置是固定的，只需要控制<code>left</code>的位置即可。 </p>
+<p>按照动效来看，需要在每次点击tab后更新指示器位置。可以使用Vue的<code>$refs</code>获取到对应的dom，然后获取dom的位置，然后进一步计算出tab的<code>left</code>。</p>
+<p>从动效图中可以看出，指示器和指示器在垂直方向是完全对齐的，也就是两者的的垂直平分线是完全重合的。</p>
+<p>要达到这种效果，我们可以按照下图来进行计算：</p>
+<p><img src="https://i.loli.net/2021/05/31/DaAxpvGmkXBodHs.png" alt="DaAxpvGmkXBodHs"></p>
+<p>图中最大的红色方框代表屏幕可视区域，红色方框顶部方框表示滚动区域；</p>
+<p>屏幕外左侧虚线框代表tab滚动容器已经滚去的部分，而A代表当前选中的tab栏相对于滚动容器左侧的距离(offsetLeft)，B则是当前选中tab栏一半的宽度(offsetWidth / 2)，C则是指示器宽度的一半。</p>
+<p>要想让指示器的垂线和当前选中tab栏的垂线重合，计算出指示器相对于滚动容器左侧的距离即可。</p>
+<p>按图可知，用tab栏相对于滚动容器左侧距离加上当前tab栏宽度的一半数值，就可以得到当前tab栏中线相对于滚动容器左侧的距离；同时为了将指示器和tab栏垂线重合，再减去一半的指示器宽度即可。计算公式如下：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">tab<span class="token punctuation">.</span>offsetLeft <span class="token operator">+</span> tab<span class="token punctuation">.</span>offsetWidth <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">-</span> pointerWidth <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>接下来只要在点击tab后更新指示器位置就可以了，tab的dom可以用ref拿到，所以写这样一个函数，在<code>handleNavClick</code>里进行调用即可。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function">handleUpdatePointerPos</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">const</span> dom <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>$refs<span class="token punctuation">.</span>navs<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>activeNavIdx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>pointerX <span class="token operator">=</span> dom<span class="token punctuation">.</span>offsetLeft <span class="token operator">+</span> dom<span class="token punctuation">.</span>offsetWidth <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pointerWidth <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>指示器的宽度一般是固定的，所以将指示器宽度写在data里(<code>pointerWidth</code>)，通过css变量赋值给html里的指示器dom使用。同时在计算指示器位置时也可以直接从data里取到对应的值。</p>
+<p>计算出指示器位置后，将位置更新到data里，然后将css变量绑定到tab父元素上，供子元素指示器使用。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token punctuation">&#123;</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+            <span class="token operator">...</span><span class="token punctuation">,</span>
+            pointerWidth<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+            pointerX<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">100</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    computed<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">pointerStyle</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+                <span class="token string">'--pointer-x'</span><span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pointerX<span class="token punctuation">,</span>
+                <span class="token string">'--pointer-width'</span><span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pointerWidth
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-nav-list<span class="token punctuation">"</span></span> <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>handleNavClick<span class="token punctuation">"</span></span> <span class="token attr-name">:style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pointerStyle<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+...
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token selector">.demo-nav-list::after</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+    <span class="token property">bottom</span><span class="token punctuation">:</span> 7px<span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--pointer-x<span class="token punctuation">)</span> * 1px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--pointer-width<span class="token punctuation">)</span> * 1px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">border-top</span><span class="token punctuation">:</span> 2px solid red<span class="token punctuation">;</span>
+    <span class="token property">transition</span><span class="token punctuation">:</span> left ease 0.3s<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>同时在页面刚加载完没有发生任何点击事件时，指示器的位置是未知的，所以要在<code>mounted</code>生命周期里更新一下指示器位置。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function">mounted</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">handleUpdatePointerPos</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>到现在为止，指示器在tab栏发生点击后就会跟随移动到tab栏正下方了，再解决了tab栏点击后自动滚动至页面中间的问题后就算大功告成了。</p>
+<h2 id="滚动至页面中间"><a href="#滚动至页面中间" class="headerlink" title="滚动至页面中间"></a>滚动至页面中间</h2><p><code>scrollIntoView</code>这个API可以将元素滚动到可见位置，它的可选参数可以指定滚动到<code>start</code>，<code>center</code>，<code>end</code>，<code>nearest</code>，还可以使用平滑滚动，难道这么简单就解决了？</p>
+<p>实际测试之后发现Chrome和Firefox正常，而Safari的表现非常诡异，并没有按照指定的<code>center</code>来滚动，而且也没有平滑滚动的效果。</p>
+<p>使用<a target="_blank" rel="noopener" href="https://www.caniuse.com/">caniuse</a>查询以后，Safari支持率一片爆红，只能弃之。</p>
+<p>转换思路，用<code>scrollTo</code>进行滚动，同时使用CSS属性<code>scroll-behavior: smooth;</code>进行平滑滚动；然而Safari也不支持，这样只能手动实现平滑滚动效果了。</p>
+<p>按照下图所示，A代表滚动容器当前已卷去的距离<code>box.scrollLeft</code>，B代表屏幕宽度的一半<code>window.innerWidth / 2</code>，即屏幕垂直平分线的位置；C代表tab栏宽度的一半<code>tab.offsetWidth / 2</code>;而D表示tab栏相对于滚动容器左侧的距离<code>tab.offsetLeft</code>。</p>
+<p>为了将tab栏滚动到屏幕中心位置，其实也就是将倒数第一条黑色竖线的位置移动到屏幕中线位置，即倒数第二条紫色竖线位置。</p>
+<p>只要将滚动值减小，黑色竖线就会向左移动直到和紫色竖线重合。现在只要求出两条竖线之间的距离就可以知道要滚动多少距离了。</p>
+<p>黑色竖线和紫色竖线之间的距离有以下公式：<code>D + C - (A + B)</code>，用实际代码表现出来则是：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> size <span class="token operator">=</span> tab<span class="token punctuation">.</span>offsetLeft <span class="token operator">+</span> tab<span class="token punctuation">.</span>offsetWidth <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token punctuation">(</span>scrollBox<span class="token punctuation">.</span>scrollLeft <span class="token operator">+</span> window<span class="token punctuation">.</span>innerWidth <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>现在求出了两竖线之间的距离，然而我们是要调用<code>scrollTo</code>进行滚动的，所以要给出一个准确的目标值。所以我们用当前的已滚动距离加上两线距离之差就可以得出一个准确的目标值。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">const</span> toPos <span class="token operator">=</span> scroll<span class="token punctuation">.</span>scrollLeft <span class="token operator">+</span> size<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>为什么是加呢？如图所示，要将黑色竖线往紫色竖线的位置移动直至重合，那么就意味着要将黑色竖线往回拉扯，也就是往左滚动增加滚动值了。</p>
+<p>如果tab栏在紫色竖线左侧呢？那么上方的<code>size</code>变量将得到一个负值。加负值滚动值会变小，也就是往右滚动了。</p>
+<p><img src="https://i.loli.net/2021/05/31/PkUElAMbLp593Se.png" alt="PkUElAMbLp593Se"></p>
+<p>现在点击tab栏后，计算出需要滚动的距离，然后调用封装好的平滑滚动函数进行滚动即可。</p>
+<h2 id="修复指示器位置"><a href="#修复指示器位置" class="headerlink" title="修复指示器位置"></a>修复指示器位置</h2><p>虽然tab栏滚动的中间的问题解决了，然而指示器位置出现了异常。因为平滑滚动是异步函数，在滚动尚未结束时更新指示器位置的函数<code>handleUpdatePointerPos</code>就开始执行了，执行时平滑滚动函数还未执行完毕，此时<code>handleUpdatePointerPos</code>获取到的tab位置<code>dom.offsetLeft</code>是不准确的。</p>
+<p>所以得在执行<code>handleUpdatePointerPos</code>时就提供准确的tab位置。</p>
+<p>点击tab栏后，部分tab栏其实是不需要也不能往中间滚动的，如第一个tab和最后一个tab。所以上个章节中计算出的滚动目标有可能超出范围，所以要对其范围进行判断。</p>
+<p>最小滚动范围为0，最大滚动范围则是用容器内容的总宽度减去可见区域宽度: <code>const limitScroll = scroll.scrollWidth - window.innerWidth</code>；</p>
+<p>如果超出了范围，说明不需要进行滚动也不会滚动，<code>handleUpdatePointerPos</code>照常执行即可。</p>
+<p>如果没有超出范围，则计算相应的值。<code>handleUpdatePointerPos</code>函数中<code>用tab栏相对于滚动容器左侧距离加上当前tab栏宽度的一半数值</code>在此时相当于就是屏幕中线，所以用<code>toPos + window.innerWidth / 2</code>计算即可。</p>
+<p>为了获取相应数值，将<code>handleUpdatePointerPos</code>移动到滚动tab函数的最后一部分。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token punctuation">&#123;</span>
+    <span class="token operator">...</span><span class="token punctuation">,</span>
+    <span class="token function">handleScrollNavToCenter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token operator">...</span>
+
+        <span class="token keyword">let</span> v <span class="token operator">=</span> toPos <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> toPos <span class="token operator">&lt;</span> limitScroll <span class="token operator">?</span> toPos <span class="token operator">+</span> halfScreenWidth <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+            <span class="token comment">// 计算滚动完成后元素相对于滚动容器的x轴位置</span>
+
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">handleUpdatePointerPos</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token function">handleUpdatePointerPos</span><span class="token punctuation">(</span><span class="token parameter">v</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">const</span> dom <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>$refs<span class="token punctuation">.</span>navs<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>activeNavIdx<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>pointerX <span class="token operator">=</span> <span class="token punctuation">(</span>v <span class="token operator">?</span> v <span class="token operator">:</span> <span class="token punctuation">(</span>dom<span class="token punctuation">.</span>offsetLeft <span class="token operator">+</span> dom<span class="token punctuation">.</span>offsetWidth <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token keyword">this</span><span class="token punctuation">.</span>pointerWidth <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="平滑滚动"><a href="#平滑滚动" class="headerlink" title="平滑滚动"></a>平滑滚动</h2><p>这个函数是以前封装好直接拿过来用的，在此就不再赘述了。</p>
+<p>主要思想就是每次滚动剩余滚动距离的一个固定比例(如一半)，然后在剩余滚动距离小于某个阈值时停止滚动。为了平滑滚动的效果，一般是跟随屏幕刷新率进行滚动。</p>
+<p>用<code>window.requestAnimationFrame</code>可以完美实现，如果浏览器不支持<code>requestAnimationFrame</code>可以用<code>setTimeout</code>进行实现，定时时间用1s === 1000ms / 屏幕刷新率(一般为60hz) ≈ 17ms即可。</p>
+
+    </div>
+</div>
+
+<div class="pagination">
+    
+    
+    <a href="/2019/09/06/使用Debian做路由器/" class="link next">使用Debian做路由器</a>
+    
+</div>
+            </article>
+            <footer class="footer">
+    <p class="copyright">©️ 2018 - 2021 冷的我不想打AD</p>
+    <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
+</footer>
+        </main>
+    </div>
+</body>
+
+</html>
