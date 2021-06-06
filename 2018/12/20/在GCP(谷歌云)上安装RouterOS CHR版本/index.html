@@ -11,10 +11,12 @@
     
         在GCP(谷歌云)上安装RouterOS CHR版本 - 
      
-    冷的我不想打AD
+    地铁三号线不相信眼泪
 </title>
     <link rel="alternate" href="/rss.xml" type="application/atom+xml">
     <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="description" content="蓝天、大地，还有清风,正指引我前进。">
+    <meta name="keywords" content="vhvy" >
 <meta name="generator" content="Hexo 5.4.0"></head>
 
 <body>
@@ -112,8 +114,9 @@
         
         
         
-        <p class="expired-tips">提醒：本文最后更新于 894 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        <p class="expired-tips">提醒：本文最后更新于 900 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
         
+         
         <p>前段时间就注意到了GCP送免费300刀的活动，想试一下在上面装RouterOS的CHR版本，于是就有了本文的诞生。</p>
 <p>注册GCP以及信用卡验证以及普通设置这些环节想必我就不用多说了，大家肯定都会的。</p>
 <p>如果你使用的是Linux或者macOS之类的*nix系统，请直接往下拉。如果你使用的是Win10操作系统，请启用Win10的Linux子系统，即WSL，接下来的操作需要在shell环境进行操作；   </p>
@@ -122,10 +125,10 @@
 brew <span class="token function">install</span> truncate<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>本文参考自mikritik的<a target="_blank" rel="noopener" href="https://wiki.mikrotik.com/wiki/Manual:CHR_GCE">wiki</a>。</p>
 <p>首先打开mikritik的<a target="_blank" rel="noopener" href="https://mikrotik.com/download">下载页面</a>，我们需要下载CHR的RAW格式镜像，如下图。      </p>
-<p><img src="https://i.loli.net/2020/12/08/lzBVgd3KqXTrnto.png" alt="下载地址">  </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/lzBVgd3KqXTrnto.png" alt="下载地址"/>  </p>
 <p>右键-复制链接地址，打开终端：    </p>
 <p><code>wget https://download2.mikrotik.com/routeros/6.43.7/chr-6.43.7.img.zip</code>    </p>
-<p><img src="https://i.loli.net/2020/12/08/aUN49TCHe2LtGZn.png" alt="下载">    </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/aUN49TCHe2LtGZn.png" alt="下载"/>    </p>
 <p>然后解压：    </p>
 <p><code>unzip chr-6.43.7.img.zip</code>    </p>
 <p>由于谷歌云的限制，所以我们需要调整一下文件大小：    </p>
@@ -143,33 +146,33 @@ tar -Sczf chr-6.43.7.tar.gz disk.raw<span aria-hidden="true" class="line-numbers
 gtar -Sczf chr-6.43.7.tar.gz disk.raw<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>macOS必须使用gtar进行打包，使用tar进行打包到后面100%报错。    </p>
-<p><img src="https://i.loli.net/2020/12/08/olKmJVxOhGrj4fD.png" alt="img">    </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/olKmJVxOhGrj4fD.png" alt="img"/>    </p>
 <p>至此镜像制作完毕，接下来在谷歌云的WEB界面进行操作。</p>
 <p>打开<a href="console.cloud.google.com">谷歌云控制台</a>，点击左侧导航菜单-存储-存储-<a target="_blank" rel="noopener" href="https://console.cloud.google.com/storage/browser">浏览器</a>，然后创建存储分区。    </p>
-<p><img src="https://i.loli.net/2020/12/08/kAInfTBqM1abzlr.png" alt="存储分区"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/kAInfTBqM1abzlr.png" alt="存储分区"/></p>
 <p>接下来创建存储分区，名称随便起吧。    </p>
-<p><img src="https://i.loli.net/2020/12/08/6DLoTu3Sb5v9ypm.png" alt="建立存储分区"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/6DLoTu3Sb5v9ypm.png" alt="建立存储分区"/></p>
 <p>然后上传刚才打包好的镜像</p>
-<p><img src="https://i.loli.net/2020/12/08/omB2jEcwHyrlvg8.png" alt="镜像"><br><img src="https://i.loli.net/2020/12/08/rFksTGd2LEmCOuK.png" alt="镜像"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/omB2jEcwHyrlvg8.png" alt="镜像"/><br><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/rFksTGd2LEmCOuK.png" alt="镜像"/></p>
 <p>接着点击左侧导航菜单-计算-Compute Engine-<a target="_blank" rel="noopener" href="https://console.cloud.google.com/compute/images">映像</a></p>
-<p><img src="https://i.loli.net/2020/12/08/ehtuB5UT4bF9QIx.png" alt="映像">  </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/ehtuB5UT4bF9QIx.png" alt="映像"/>  </p>
 <p>点击创建映像，来源选择Cloud Storage，然后选择刚才上传的映像。</p>
-<p><img src="https://i.loli.net/2020/12/08/UNKIFPpXQfDctdT.png" alt="创建映像"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/UNKIFPpXQfDctdT.png" alt="创建映像"/></p>
 <p>然后点击左侧导航菜单-计算-Compute Engine-<a target="_blank" rel="noopener" href="https://console.cloud.google.com/compute/instances">VM实例</a>，选择创建实例。</p>
 <p>区域我选择的台湾b区，机器类型用微型，并取消容器的勾选，然后更改启动磁盘为自定义映像，并选择刚才创建的映像，磁盘大小选择1G即可。</p>
 <p>防火墙选择勾选允许HTTP和HTTPS流量。</p>
-<p><img src="https://i.loli.net/2020/12/08/WO9jdl8Mg5Q2bq4.png" alt="img"></p>
-<p><img src="https://i.loli.net/2020/12/08/vqnchtBPYLMVH2e.png" alt="img"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/WO9jdl8Mg5Q2bq4.png" alt="img"/></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/vqnchtBPYLMVH2e.png" alt="img"/></p>
 <p>稍等几十秒，实例即可创建完毕。</p>
-<p><img src="https://i.loli.net/2020/12/08/rAqdl8mPiwcIk3t.png" alt="img"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/rAqdl8mPiwcIk3t.png" alt="img"/></p>
 <p>打开WinBox，连接外部ip，账户名admin，密码为空。</p>
 <p>打开System-Users，创建一个Group为full的新用户并设置密码，然后删除admin账户。</p>
 <p>然后打开IP-Services，关闭除了WinBox之外的所有服务。</p>
-<p><img src="https://i.loli.net/2020/12/08/FPygl3I8s9XYDLe.png" alt="img"></p>
-<p><img src="https://i.loli.net/2020/12/08/eX3K7EFUT28xRbz.png" alt="img">    </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/FPygl3I8s9XYDLe.png" alt="img"/></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/eX3K7EFUT28xRbz.png" alt="img"/>    </p>
 <p>至此，RouterOS CHR创建完毕，不过此时的CHR的端口速率被限制在1M，可以在IP-License中点击Renew License中登陆Mikrotik的账户，级别选择P1，可以免费体验两个月的P1，即解除端口速率限制至1G，如果后续还需要继续使用，可以在万能的淘宝购买CHR P1许可证，大概160 RMB左右。</p>
-<p><img src="https://i.loli.net/2020/12/08/uN8D7EfloGydXQ6.png" alt="img"></p>
-<p><img src="https://i.loli.net/2020/12/08/ihclBQSgUP3Xdka.png" alt="img"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/uN8D7EfloGydXQ6.png" alt="img"/></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/ihclBQSgUP3Xdka.png" alt="img"/></p>
 
     </div>
 </div>
@@ -182,9 +185,13 @@ gtar -Sczf chr-6.43.7.tar.gz disk.raw<span aria-hidden="true" class="line-number
     <a href="/2018/11/09/ESXI中运行RouterOS和openWRT/" class="link next">ESXI中运行RouterOS和openWRT</a>
     
 </div>
+
+
+<script src="/js/content.js"></script>
+
             </article>
             <footer class="footer">
-    <p class="copyright">©️ 2018 - 2021 冷的我不想打AD</p>
+    <p class="copyright">©️ 2018 - 2021 地铁三号线不相信眼泪</p>
     <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
 </footer>
         </main>

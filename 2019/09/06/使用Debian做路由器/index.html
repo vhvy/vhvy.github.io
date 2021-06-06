@@ -11,10 +11,12 @@
     
         使用Debian做路由器 - 
      
-    冷的我不想打AD
+    地铁三号线不相信眼泪
 </title>
     <link rel="alternate" href="/rss.xml" type="application/atom+xml">
     <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="description" content="蓝天、大地，还有清风,正指引我前进。">
+    <meta name="keywords" content="vhvy" >
 <meta name="generator" content="Hexo 5.4.0"></head>
 
 <body>
@@ -123,8 +125,9 @@
         
         
         
-        <p class="expired-tips">提醒：本文最后更新于 634 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        <p class="expired-tips">提醒：本文最后更新于 640 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
         
+         
         <h2 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h2><p>以前一直使用RouterOS，最近更新之后遇到了一些严重的BUG，决定把它换成Linux，免费并且可以顺便学习一下Linux。</p>
 <p>Debian作为最正统的发行版，我对它一直很有好感，前几天Debian 10刚好也发布了，那么就选它吧！</p>
 <p>开工之前先要明确目标，不然就是瞎干了。</p>
@@ -139,7 +142,7 @@
 <h2 id="开工"><a href="#开工" class="headerlink" title="开工"></a>开工</h2><p>我是在ESXI中运行路由系统的，安装过程不再赘述，这些都是基本操作了。</p>
 <p>我先大概描述一下我的网络环境，诸位观看(真的有人吗?)理解时也会更容易。</p>
 <p>暂时是用RouterOS上网的，等Debian 配置完成后就会关闭RouterOS，使用Debian作为网关路由器。</p>
-<p><img src="/data/images/2019-09-0610.33.28.png" alt="img"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="/data/images/2019-09-0610.33.28.png" alt="img"/></p>
 <p>建议刚装完时先连接上别的网络，因为需要安装各种包以及更新。等<code>pppoe</code>连接上以后就可以直接使用<code>pppoe</code>上网了，</p>
 <p>开启免密登录，不然每次输入密码登录debian非常麻烦，在自己的电脑上生成自己的key，然后cat ~/.ssh/id_rsa.pub，复制之后切换到Debian的终端，然后</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"你的key"</span> <span class="token operator">>></span> ~/.ssh/authorized_keys<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -185,7 +188,7 @@ net.ipv6.conf.ppp0.accept_ra&#x3D;2<span aria-hidden="true" class="line-numbers-
 
 <p>安装过程中会出现设置向导，按照指引输入账号密码和对应的网卡接口就可以设置完成。</p>
 <p>设置完成后输入<code>ip a</code>就可以看到<code>pppoe</code>已经成功拨号。</p>
-<p><img src="/data/images/WX20190906-114940@2x.png" alt="img"></p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="/data/images/WX20190906-114940@2x.png" alt="img"/></p>
 <p>此时它会在<code>/etc/ppp/peers/</code>下生成一个<code>dsl-provider</code>文件，里面包含了拨号用的各种配置信息。</p>
 <p>此时我们可以用<code>pon dsl-provider</code>和<code>poff</code>进行<code>pppoe</code>的连接和断开，但是这么做也太不优雅了，而且以后管理起来也不甚方便，所以我们为它制作一个<code>systemd</code>服务。</p>
 <p>首先删除<code>/etc/network/interface</code>文件里pppoe自动添加的配置，由于我已经删掉了相关代码片段，所以就无法上图了，诸位自行删除就好，以<code>auto ppp0</code>开头的就是，同时旁边有注释表明此段配置信息由<code>pppoeconf</code>自动生成。</p>
@@ -447,9 +450,13 @@ iface eth1 inet static
     <a href="/2019/08/08/博客现已用React重写/" class="link next">博客现已用React重写</a>
     
 </div>
+
+
+<script src="/js/content.js"></script>
+
             </article>
             <footer class="footer">
-    <p class="copyright">©️ 2018 - 2021 冷的我不想打AD</p>
+    <p class="copyright">©️ 2018 - 2021 地铁三号线不相信眼泪</p>
     <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
 </footer>
         </main>

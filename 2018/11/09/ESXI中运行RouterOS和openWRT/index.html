@@ -11,10 +11,12 @@
     
         ESXI中运行RouterOS和openWRT - 
      
-    冷的我不想打AD
+    地铁三号线不相信眼泪
 </title>
     <link rel="alternate" href="/rss.xml" type="application/atom+xml">
     <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="description" content="蓝天、大地，还有清风,正指引我前进。">
+    <meta name="keywords" content="vhvy" >
 <meta name="generator" content="Hexo 5.4.0"></head>
 
 <body>
@@ -112,12 +114,13 @@
         
         
         
-        <p class="expired-tips">提醒：本文最后更新于 935 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
+        <p class="expired-tips">提醒：本文最后更新于 941 天前，文中所描述的信息可能已发生改变，请谨慎使用。</p>
         
+         
         <p>平时搞一些前端项目时发现npm的速度非常慢，淘宝的cnpm又总是有些莫名其妙的问题，于是有了加速访问的想法。</p>
 <p>思路来自如下链接，感谢这位博主。   </p>
 <p><a target="_blank" rel="noopener" href="https://www.willnet.net/index.php/archives/95/">https://www.willnet.net/index.php/archives/95/</a></p>
-<p><img src="https://i.loli.net/2020/12/08/V8QkxMAF62zUX3N.png" alt="20181109173529.png">  </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/V8QkxMAF62zUX3N.png" alt="20181109173529.png"/>  </p>
 <p>用RouterOS建立一个中国大陆IP段的Address Lists,然后用Mangle建立一个非大陆IP的Routing Mark，最后添加一条路由使访问非大陆IP的流量从部署了SSR的openWRT中出去。   </p>
 <p>说干就干，部署ESXI以及RouterOS CHR就不再赘述，想必诸位能看到这里，想必这些简单的东西肯定是会的。</p>
 <p>首先要得到中国大陆IP段列表，可以去APNIC得到，具体指令如下：   </p>
@@ -126,7 +129,7 @@
 <p><code>cat 1.txt | grep ipv4 | grep CN | awk -F\| &#39;&#123; printf(&quot;%s/%d\n&quot;, $4, 32-log($5)/log(2)) &#125;&#39; &gt; chnroute.rsc</code>   </p>
 <p>然后用打开VSCode之类的编辑器打开chnroute.rsc，在第一行添加<code>/ip firewall address-list</code>，然后使用多行编辑功能在其他的所有行首添加<code>add list=cn-ip address=</code>，VSCode是单击第二行行首，然后拉到最后一行，按住ALT+Shift单击最后一行行首，即可选中所有行行首；建议在此之前直接复制<code>add list=cn-ip address=</code>，然后选中后直接粘贴即可。   </p>
 <p>最终效果如下：   </p>
-<p><img src="https://i.loli.net/2020/12/08/nXgjy6ePwWVuZUb.png" alt="20181109181750.png">   </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/nXgjy6ePwWVuZUb.png" alt="20181109181750.png"/>   </p>
 <p>在此提供截至2018/11/09的中国大陆IP段列表，可以直接在RouterOS内导入。  </p>
 <p><a href="/data/file/chnroute.rsc">我是成品列表</a>   </p>
 <p>接下来打开WinBox的File菜单，将chnroute.rsc拖入。</p>
@@ -136,7 +139,7 @@
 <p><a href="/data/file/route-list.rsc">我是保留IP列表</a>   </p>
 <p><code>import file-name=route-list.rsc</code>   </p>
 <p>在IP-Firewall-Address Lists中可看到导入的数据。   </p>
-<p><img src="https://i.loli.net/2020/12/08/EWS4akLVi8RptcH.png" alt="20181109182548.png">    </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/EWS4akLVi8RptcH.png" alt="20181109182548.png"/>    </p>
 <p>接下来建立一个需要加速的内网设备ip列表，我并不需要让所有设备加速，防止它们无端的消耗流量。   </p>
 <p>如果你的内网设备较少或者直接让整个内网网段加速，那么可以跳过这一步，在下面建立非大陆IP的Routing Mark时，将代码中的<code>src-address-list=goG</code>改为你的内网网段，比如<code>src-address=192.168.1.1/24</code>。   </p>
 <p>建立需要加速的ip列表:    </p>
@@ -153,11 +156,11 @@ add chain&#x3D;prerouting src-address-list&#x3D;goG dst-address-list&#x3D;!cn-ip
 
 <p>接下来调openwrt这边，我是用lean大佬的源码编译的x86固件，地址在这里：<a target="_blank" rel="noopener" href="https://github.com/coolsnowwolf/lede">https://github.com/coolsnowwolf/lede</a>    </p>
 <p>编译出来的固件我使用的是openwrt-x86-64-combined-squashfs.img，然后使用StarWind V2V Image Converter可以转为ESXI使用的vmdk文件，注意转换出来后是两个vmdk文件，将两个文件都上传到ESXI里后它们会自动合并为一块虚拟硬盘，届时在openwrt里添加这块硬盘就可以了。    </p>
-<p><img src="https://i.loli.net/2020/12/08/kx9OerWNYwoaKvt.png" alt="20181109192211.png">   </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/kx9OerWNYwoaKvt.png" alt="20181109192211.png"/>   </p>
 <p>在ESXI中新建一个虚拟交换机，不要绑定物理网卡，接着以这个虚拟交换机为基础建立一个端口组，端口组VLAN ID为4095，将openwrt和ROS添加到这个端口组上。  </p>
 <p>然后主要是在这个新建的端口组上做文章，使用VLAN的方式单线复用，让openWRT和ROS可以进行通信，openWRT的WAN口VLAN ID为20，ip地址为192.168.99.2，对应的ROS IP地址为192.168.99.1；LAN口VLAN ID为10，IP地址为192.168.88.1，对应的ROS IP地址为192.168.88.2   </p>
 <p>启动openwrt，在控制台中输入<code>vim /etc/config/network</code>，修改LAN口的网卡eth0为eth0.10以及ip地址，并按照下图添加wan口;   </p>
-<p><img src="https://i.loli.net/2020/12/08/FDeJvEx4VsNAmbX.png" alt="20181109194105.png">   </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/FDeJvEx4VsNAmbX.png" alt="20181109194105.png"/>   </p>
 <p>接下来给ROS添加VLAN并配上对应的ip地址，打开ROS终端：   </p>
 <p>ether3为openwrt对应的网卡，请自行替换。</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">&#x2F;interface vlan
@@ -168,7 +171,7 @@ add address&#x3D;192.168.88.2&#x2F;24 netmask&#x3D;255.255.255.0 interface&#x3D;
 add address&#x3D;192.168.99.1&#x2F;24 netmask&#x3D;255.255.255.0 interface&#x3D;opWAN<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>现在在浏览器中打开192.168.88.1，网络-DHCP/DNS-取消仅本地服务的勾选。    </p>
-<p><img src="https://i.loli.net/2020/12/08/zSD8hpIKqLdul7s.png" alt="20181109195135.png">    </p>
+<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2020/12/08/zSD8hpIKqLdul7s.png" alt="20181109195135.png"/>    </p>
 <p>然后将需要加速的设备的DNS请求转发给192.168.88.1     </p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">&#x2F;ip firewall nat
 add chain&#x3D;dstnat protocol&#x3D;udp dst-port&#x3D;53 src-address-list&#x3D;goG action&#x3D;dst-nat to-addresses&#x3D;192.168.88.1 to-ports&#x3D;53<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
@@ -200,9 +203,13 @@ add dst-address&#x3D;0.0.0.0&#x2F;0 gateway&#x3D;192.168.88.1 routing-mark&#x3D;
     <a href="/2018/10/20/替换穿越火线九周年背景音乐为老版本经典背景音乐/" class="link next">替换穿越火线九周年背景音乐为老版本经典背景音乐</a>
     
 </div>
+
+
+<script src="/js/content.js"></script>
+
             </article>
             <footer class="footer">
-    <p class="copyright">©️ 2018 - 2021 冷的我不想打AD</p>
+    <p class="copyright">©️ 2018 - 2021 地铁三号线不相信眼泪</p>
     <p class="powered">Powered By <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/vhvy/hexo-theme-veni">Veni</a></p>
 </footer>
         </main>

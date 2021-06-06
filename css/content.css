@@ -1,1 +1,1 @@
-.container .content-box{border-bottom:1px solid #ccc}.container .content-box img{max-width:90%}
+.container .content-box{border-bottom:1px solid #ccc}.container .content-box img{max-width:90%;display:inline-block}.container .content-box img[data-original]{width:80px;height:80px}
