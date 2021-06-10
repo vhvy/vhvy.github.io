@@ -127,7 +127,7 @@
          
         <p>两年多没写过博客了，我也不知道都在忙什么，以后还是要坚持写博客的，起码把自己的一些想法记录下来。</p>
 <p>前两天突然很好奇一个很常见的动效是怎么实现的，今天有空了就花了一会时间将它实现了一遍。</p>
-<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/05/30/mIDUzAL2nGa1Ste.gif" alt="Kapture 2021-05-30 at 22.24.29.gif"/></p>
+<p><img  class="post-img" src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/05/30/mIDUzAL2nGa1Ste.gif" alt="Kapture 2021-05-30 at 22.24.29.gif"/></p>
 <p>最终效果DEMO: <a target="_blank" rel="noopener" href="https://vhvy-demo.netlify.app/horizontal-scroll">https://vhvy-demo.netlify.app/horizontal-scroll</a></p>
 <p>代码地址: <a target="_blank" rel="noopener" href="https://github.com/vhvy/some-demo/tree/master/horizontal-scroll">https://github.com/vhvy/some-demo/tree/master/horizontal-scroll</a></p>
 <h2 id="分析动效"><a href="#分析动效" class="headerlink" title="分析动效"></a>分析动效</h2><p>从效果图上可以看出，这一个文字内容不定长的Tab列表；点击tab项时tab会被高亮，并将tab滚动到屏幕正中间，同时tab下方的指示条在经过短暂的延迟后滑动到当前选中的tab下。</p>
@@ -171,7 +171,7 @@
 <p>按照动效来看，需要在每次点击tab后更新指示器位置。可以使用Vue的<code>$refs</code>获取到对应的dom，然后获取dom的位置，然后进一步计算出tab的<code>left</code>。</p>
 <p>从动效图中可以看出，指示器和指示器在垂直方向是完全对齐的，也就是两者的的垂直平分线是完全重合的。</p>
 <p>要达到这种效果，我们可以按照下图来进行计算：</p>
-<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/05/31/DaAxpvGmkXBodHs.png" alt="DaAxpvGmkXBodHs"/></p>
+<p><img  class="post-img" src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/05/31/DaAxpvGmkXBodHs.png" alt="DaAxpvGmkXBodHs"/></p>
 <p>图中最大的红色方框代表屏幕可视区域，红色方框顶部方框表示滚动区域；</p>
 <p>屏幕外左侧虚线框代表tab滚动容器已经滚去的部分，而A代表当前选中的tab栏相对于滚动容器左侧的距离(offsetLeft)，B则是当前选中tab栏一半的宽度(offsetWidth / 2)，C则是指示器宽度的一半。</p>
 <p>要想让指示器的垂线和当前选中tab栏的垂线重合，计算出指示器相对于滚动容器左侧的距离即可。</p>
@@ -239,7 +239,7 @@
 
 <p>为什么是加呢？如图所示，要将黑色竖线往紫色竖线的位置移动直至重合，那么就意味着要将黑色竖线往回拉扯，也就是往左滚动增加滚动值了。</p>
 <p>如果tab栏在紫色竖线左侧呢？那么上方的<code>size</code>变量将得到一个负值。加负值滚动值会变小，也就是往右滚动了。</p>
-<p><img  src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/05/31/PkUElAMbLp593Se.png" alt="PkUElAMbLp593Se"/></p>
+<p><img  class="post-img" src="https://i.loli.net/2021/06/06/YcUyJTBV7ExC6hp.gif" data-original="https://i.loli.net/2021/05/31/PkUElAMbLp593Se.png" alt="PkUElAMbLp593Se"/></p>
 <p>现在点击tab栏后，计算出需要滚动的距离，然后调用封装好的平滑滚动函数进行滚动即可。</p>
 <h2 id="修复指示器位置"><a href="#修复指示器位置" class="headerlink" title="修复指示器位置"></a>修复指示器位置</h2><p>虽然tab栏滚动的中间的问题解决了，然而指示器位置出现了异常。因为平滑滚动是异步函数，在滚动尚未结束时更新指示器位置的函数<code>handleUpdatePointerPos</code>就开始执行了，执行时平滑滚动函数还未执行完毕，此时<code>handleUpdatePointerPos</code>获取到的tab位置<code>dom.offsetLeft</code>是不准确的。</p>
 <p>所以得在执行<code>handleUpdatePointerPos</code>时就提供准确的tab位置。</p>

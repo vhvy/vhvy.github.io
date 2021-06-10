@@ -18,7 +18,9 @@ class LazyLoadImg {
         const src = el.getAttribute('data-original');
         let image = new Image();
         image.onload = () => {
-            el.removeAttribute('data-original');
+            el.onload = () => {
+                el.removeAttribute('data-original');
+            }
             el.setAttribute('src', src);
             image = null;
         }
